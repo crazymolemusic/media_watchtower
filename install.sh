@@ -1,33 +1,59 @@
 #!/usr/bin/env bash
-# ================================================================================
-# 🗼 MEDIA WATCHTOWER AUTOMATED INSTALLER & LAUNCHER
-# ================================================================================
+# ==============================================================================
+# 🗼 MEDIA WATCHTOWER - AUTOMATED INSTALLATION MATRIX
+# ==============================================================================
+set -e
 
-# Ensure the system has git and python3 installed
-echo "[*] Verifying system pre-requisites..."
-if ! command -v git &> /dev/null; then
-    echo "[*] Git not found. Installing git..."
-    sudo apt-get update && sudo apt-get install -y git
-fi
-
+echo "[*] Initializing system dependency configuration check..."
 if ! command -v python3 &> /dev/null; then
-    echo "[*] Python3 not found. Installing python3..."
-    sudo apt-get update && sudo apt-get install -y python3 python3-pip
+    echo "[!] Error: Python 3 ecosystem infrastructure missing. Run: sudo apt install python3 python3-pip -y"
+    exit 1
 fi
 
-# Target download directory
-TARGET_DIR="$HOME/media-watchtower"
+if ! command -v git &> /dev/null; then
+    echo "[!] Error: Git tool tree missing. Run: sudo apt install git -y"
+    exit 1
+fi
+
+# Define path configurations using your actual username
+TARGET_DIR="/home/cole/media_watchtower"
 
 if [ -d "$TARGET_DIR" ]; then
-    echo "[*] Existing installation found at $TARGET_DIR. Updating repository..."
-    cd "$TARGET_DIR" || exit
-    git pull
-else
-    echo "[*] Cloning Media Watchtower repository from GitHub..."
-    git clone https://github.com/crazymolemusic/media-watchtower.git "$TARGET_DIR"
-    cd "$TARGET_DIR" || exit
+    echo "[*] Pre-existing node footprint detected. Wiping local environment storage..."
+    rm -rf "$TARGET_DIR"
 fi
 
-# Run the project's cross-platform bootstrapper
-echo "[*] Initializing background server applications..."
+echo "[*] Fetching application package clusters from cloud repository..."
+# FIX: Updated to your exact underscore URL
+git clone "https://github.com/crazymolemusic/media_watchtower.git" "$TARGET_DIR"
+
+# FIX: Changing directory into the correct folder name
+cd "$TARGET_DIR"
+
+echo "[*] Deploying runtime configuration vault..."
+cat << 'EOF' > config.json
+{
+    "is_installed": false,
+    "custom_logo_url": "",
+    "global_check_interval": 30,
+    "users": {},
+    "apps": {
+        "Jellyfin": {"url": "http://127.0.0.1:8096", "type": "jellyfin", "enabled": true},
+        "Threadfin": {"url": "http://127.0.0.1:34400", "type": "threadfin", "enabled": true},
+        "Pihole": {"url": "http://127.0.0.1:80", "type": "pihole", "enabled": false}
+    },
+    "metrics": {
+        "Jellyfin": {"uptime": 0, "downtime": 0, "status": "Offline Data", "log": "Awaiting execution loop..."},
+        "Threadfin": {"uptime": 0, "downtime": 0, "status": "Offline Data", "log": "Awaiting execution loop..."},
+        "Pihole": {"uptime": 0, "downtime": 0, "status": "Disabled", "log": "Monitoring loop inactive."}
+    }
+}
+EOF
+
+echo "[*] Granting execution tokens to core application files..."
+chmod +x run.py
+
+echo "[*] Launching system daemon threads detached in user memory spaces..."
 python3 run.py
+
+exit 0
