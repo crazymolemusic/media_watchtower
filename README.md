@@ -7,4 +7,5 @@ Please do condribute and try to help me out. Thanks a lot, but I will contribute
 Paste this single command into your Linux terminal to automatically install dependencies, clone the environment, and spin up the dashboard natively in the background:
 
 ```bash
-curl -sSL [https://raw.githubusercontent.com/crazymolemusic/media-watchtower/main/install.sh](https://raw.githubusercontent.com/crazymolemusic/media-watchtower/main/install.sh) | bash
+```bash
+curl -sSL "[https://raw.githubusercontent.com/crazymolemusic/media_watchtower/main/install.sh](https://raw.githubusercontent.com/crazymolemusic/media_watchtower/main/install.sh)" | bash
