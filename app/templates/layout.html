@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Watchtower Console Matrix</title>
+    <style>
+        :root { --bg: #09090b; --surface: #141417; --card: #1c1c21; --border: #2e2e35; --text: #f4f4f5; --accent: #3b82f6; --success: #10b981; --warn: #f59e0b; }
+        body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+        .wrapper { display: flex; min-height: 100vh; }
+        .nav-bar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); padding: 25px; box-sizing: border-box; }
+        .main-frame { flex: 1; padding: 40px; }
+        .branding-box { display: flex; align-items: center; margin-bottom: 30px; }
+        .branding-img { max-height: 45px; max-width: 100%; object-fit: contain; }
+        .link-item { display: block; padding: 12px; color: #a1a1aa; text-decoration: none; border-radius: 6px; margin-bottom: 6px; }
+        .link-item:hover, .link-item.active { background: var(--card); color: white; }
+        .box { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 25px; margin-bottom: 25px; }
+        .field-group { margin-bottom: 16px; }
+        .field-group label { display: block; font-size: 0.85rem; color: #a1a1aa; margin-bottom: 4px; }
+        input, select { width: 100%; padding: 10px; background: var(--surface); border: 1px solid var(--border); color: white; border-radius: 6px; box-sizing: border-box; }
+        .action-btn { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        .grid-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .status-pill { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .status-healthy { background: rgba(16,185,129,0.15); color: var(--success); }
+        .status-unhealthy { background: rgba(239,68,68,0.15); color: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        {% if view not in ['login', 'install'] %}
+        <div class="nav-bar">
+            <div class="branding-box">
+                {% if config.custom_logo_url %}
+                    <img src="{{ config.custom_logo_url }}" class="branding-img" alt="Branding Visual Logo">
+                {% else %}
+                    <span style="font-size: 1.2rem; font-weight: bold;">🗼 WATCHTOWER</span>
+                {% endif %}
+            </div>
+            <nav>
+                <a href="{{ url_for('dashboard') }}" class="link-item {% if view=='dash' %}active{% endif %}">📊 System Metrics</a>
+                {% if session.get('role') == 'Admin' %}
+                    <a href="{{ url_for('preferences') }}" class="link-item {% if view=='prefs' %}active{% endif %}">⚙️ Control Panel</a>
+                {% endif %}
+                <a href="#" onclick="alert('Media Watchtower v0.1-BETA\nDecoupled multithreaded network tracking module via runtime isolated daemon layers.')" class="link-item" style="color: var(--warn);">🏷️ Beta Release Info</a>
+                <a href="{{ url_for('logout') }}" class="link-item" style="margin-top: 30px; color: #ef4444;">🚪 Logout</a>
+            </nav>
+            <div style="position: absolute; bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                {% if session.get('pfp') %}
+                    <img src="{{ session.get('pfp') }}" style="width:35px; height:35px; border-radius:50%; object-fit: cover;">
+                {% endif %}
+                <div>
+                    <div style="font-size:0.9rem; font-weight:bold;">{{ session.get('user') }}</div>
+                    <div style="font-size:0.75rem; color:#a1a1aa;">{{ session.get('role') }}</div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="main-frame">
+            {% if view == 'install' %}
+            <div class="box" style="max-width: 500px; margin: 40px auto;">
+                <h2>⚙️ Watchtower Setup Wizard</h2>
+                <form method="post">
+                    <div class="field-group"><label>Admin Username</label><input type="text" name="username" required></div>
+                    <div class="field-group"><label>Admin Password (Min 8 chars, 1 number)</label><input type="password" name="password" required></div>
+                    <div class="field-group"><label>Profile Picture URL Link</label><input type="text" name="pfp" placeholder="https://..."></div>
+                    <div class="field-group"><label>Branding Asset Logo Link</label><input type="text" name="logo" placeholder="https://..."></div>
+                    <div class="field-group"><label>Configuration Destination Path Target</label><input type="text" value="{{ path }}" readonly style="opacity:0.6;"></div>
+                    <button type="submit" class="action-btn">Initialize App Environment</button>
+                </form>
+            </div>
+
+            {% elif view == 'login' %}
+            <div class="box" style="max-width: 380px; margin: 100px auto; text-align: center;">
+                <h2>🗼 Authenticate Session</h2>
+                <form method="post">
+                    <div class="field-group"><input type="text" name="username" placeholder="Username" required></div>
+                    <div class="field-group"><input type="password" name="password" placeholder="Password Access Pin" required></div>
+                    <button type="submit" class="action-btn" style="width: 100%;">Authorize Access Link</button>
+                </form>
+            </div>
+
+            {% elif view == 'dash' %}
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h1>📊 Infrastructure Monitoring Telemetry</h1>
+                <a href="{{ url_for('test_trigger') }}" class="action-btn" style="text-decoration: none;">🚀 Test Live Diagnostics</a>
+            </div>
+            <div class="grid-layout">
+                {% for name, metric in config.metrics.items() %}
+                <div class="box" style="margin-bottom: 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="margin: 0;">{{ name }}</h3>
+                        <span class="status-pill status-{{ 'healthy' if metric.status in ['Healthy','Disabled'] else 'unhealthy' }}">{{ metric.status }}</span>
+                    </div>
+                    <p style="font-size: 0.85rem; background: var(--bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border);">{{ metric.log }}</p>
+                    <div style="font-size: 0.8 glance; display: flex; gap: 15px;">
+                        <span>🟢 Uptime: {{ metric.uptime }}s</span>
+                        <span>🔴 Downtime: {{ metric.downtime }}s</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% elif view == 'prefs' %}
+            <h1>⚙️ System Administration Settings</h1>
+            <div class="box">
+                <h3>Global Service Links</h3>
+                <form method="post">
+                    <div class="field-group"><label>Visual Branding Asset Logo URL</label><input type="text" name="logo" value="{{ config.custom_logo_url }}"></div>
+                    <div class="field-group">
+                        <label><input type="checkbox" name="pihole_on" {% if config.apps.Pihole.enabled %}checked{% endif %} style="width: auto;"> Track Local Pi-hole Metrics Integration</label>
+                    </div>
+                    <div class="field-group"><label>Pi-hole Base URL</label><input type="text" name="pihole_url" value="{{ config.apps.Pihole.url }}"></div>
+                    <button type="submit" class="action-btn">Save Configurations</button>
+                </form>
+            </div>
+            <div class="box">
+                <h3>Add New Profile Nodes</h3>
+                <form method="post">
+                    <div class="field-group"><input type="text" name="new_username" placeholder="Username Tag" required></div>
+                    <div class="field-group"><input type="password" name="new_password" placeholder="Access Key" required></div>
+                    <div class="field-group">
+                        <select name="new_role">
+                            <option value="User">User (Standard Profile View)</option>
+                            <option value="Admin">Admin (Full System Privilege)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="action-btn">Register User Account</button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
