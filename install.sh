@@ -24,7 +24,7 @@ if [ -d "$TARGET_DIR" ]; then
     git pull
 else
     echo "[*] Cloning Media Watchtower repository from GitHub..."
-    git clone https://github.com/YOUR_GITHUB_USERNAME/media-watchtower.git "$TARGET_DIR"
+    git clone https://github.com/crazymolemusic/media-watchtower.git "$TARGET_DIR"
     cd "$TARGET_DIR" || exit
 fi
 
