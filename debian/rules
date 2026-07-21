@@ -1,0 +1,12 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	# No compilation needed
+
+override_dh_fixperms:
+	dh_fixperms
+	chmod +x debian/media-watchtower/opt/media_watchtower/run.py
+	chmod +x debian/media-watchtower/usr/bin/media-watchtower

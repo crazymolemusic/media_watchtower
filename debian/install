@@ -1,0 +1,7 @@
+# Copy core app files to system directory
+run.py /opt/media_watchtower/
+core/ /opt/media_watchtower/
+web/ /opt/media_watchtower/
+
+# Map the global shortcut into /usr/bin/
+media-watchtower /usr/bin/
