@@ -1,0 +1,4 @@
+# Copy your core application folders to /opt/
+run.py /opt/media_watchtower/
+core/ /opt/media_watchtower/
+web/ /opt/media_watchtower/
