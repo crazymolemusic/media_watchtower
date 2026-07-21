@@ -1,0 +1,13 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+# Skip building since Python doesn't need compilation
+override_dh_auto_build:
+	# No compilation needed for Python scripts
+
+# Ensure your script files have execution permissions when installed
+override_dh_fixperms:
+	dh_fixperms
+	chmod +x debian/media-watchtower/opt/media_watchtower/run.py
