@@ -1,6 +1,6 @@
 # media_watchtower
 Media Watchtower is an app that helps give status updates and data on apps used on at-home servers. Compatable with apps like Threadfin and Jellyfin, with more being able to add. This is v0.1-BETA. Easy to use with a great UI too!
-Please do condribute and try to help me out. Thanks a lot, but I will contribute a lot.
+Please do condribute and try to help me out. =)
 
 ## 🚀 One-Command Instant Installation
 
