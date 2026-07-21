@@ -1,0 +1,6 @@
+media-watchtower (0.2.0-1) unstable; urgency=medium
+
+  * Initial release of the automated telemetry and monitoring matrix.
+  * Integrated multi-user authentication, deep metrics, webhook automation, and more.
+
+ -- crazymolemusic <ofelectornic@gmail.com>  Mon, 20 Jul 2026 19:54:00 -0400
